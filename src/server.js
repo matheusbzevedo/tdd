@@ -1,8 +1,3 @@
-const express = require('express'),
-    app = express();
+const app = require('./app');
 
-app.get('/', (request, response) => {
-    response.status(200).send();
-});
-
-app.listen(3001);
+app.listen(3001, () => console.log('Rodando na porta 3001'));
