@@ -7,7 +7,7 @@
     "start": "node src/server.js",
     "lint": "eslint src/** test/** --fix",
     "test": "jest",
-    "secure-mode": "jest --watchAll --verbose=true"
+    "secure-mode": "jest --watchAll --verbose=true --runInBand --detectOpenHandles"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
