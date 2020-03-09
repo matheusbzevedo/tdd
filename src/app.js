@@ -1,3 +1,5 @@
+require('dotenv/config');
+
 const app = require('express')(),
     consign = require('consign'),
     knex = require('knex'),
@@ -10,7 +12,7 @@ consign({ cwd: 'src', verbose: false })
 .then('./config/middleware.js')
 .then('./services')
 .then('./routes')
-.then('./config/routes.js')
+.then('./config/router.js')
 .into(app);
 
 app.get('/', (request, response) => response.status(200).send());

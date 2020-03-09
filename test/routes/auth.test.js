@@ -1,8 +1,9 @@
 const request = require('supertest'),
-    app = require('../../src/app.js');
+    app = require('../../src/app.js'),
+    MAIN_ROUTE = `/auth`;
 
 test('Deve criar usuário via signup', () => {
-    return request(app).post('/auth/signup').send({ nome: 'Walter', email: `${Date.now()}@mail.com`, senha: '123456' })
+    return request(app).post(`${MAIN_ROUTE}/signup`).send({ name: 'Walter', email: `${Date.now()}@mail.com`, senha: '123456' })
     .then(response => {
         expect(response.status).toBe(201);
         expect(response.body.name).toBe('Walter');
@@ -16,7 +17,7 @@ test('Deve receber token ao logar', () => {
 
     return app.services.users.save({ name: 'Thezus', email, senha: '123456' })
     .then(() => {
-        return request(app).post('/auth/signin').send({ email, senha: '123456'})
+        return request(app).post(`${MAIN_ROUTE}/signin`).send({ email, senha: '123456'})
         .then(response => {
             expect(response.status).toBe(200);
             expect(response.body).toHaveProperty('token');
@@ -29,7 +30,7 @@ test('Deve não autenticar usuário com senha errada', () => {
 
     return app.services.users.save({ name: 'Thezus', email, senha: '123456' })
     .then(() => {
-        return request(app).post('/auth/signin').send({ email, senha: '654321'})
+        return request(app).post(`${MAIN_ROUTE}/signin`).send({ email, senha: '654321'})
         .then(response => {
             expect(response.status).toBe(400);
             expect(response.body.error).toBe('Usuário ou senha inválido');
@@ -38,7 +39,7 @@ test('Deve não autenticar usuário com senha errada', () => {
 });
 
 test('Deve não autenticar usuário não existente', () => {
-    return request(app).post('/auth/signin').send({ email: 'teste@gmail.com', senha: '654321'})
+    return request(app).post(`${MAIN_ROUTE}/signin`).send({ email: 'teste@gmail.com', senha: '654321'})
     .then(response => {
         expect(response.status).toBe(400);
         expect(response.body.error).toBe('Usuário ou senha inválido');
@@ -46,7 +47,7 @@ test('Deve não autenticar usuário não existente', () => {
 });
 
 test('Deve não acessar uma rota protegida sem token', () => {
-    return request(app).get('/users').then(response => {
+    return request(app).get('/v1/users').then(response => {
         expect(response.status).toBe(401);
     });
 });
