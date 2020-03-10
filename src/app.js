@@ -21,6 +21,7 @@ app.use((error, request, response, next) => {
     const { name, message, stack } = error;
 
     if (name == 'ValidationError') response.status(400).json({ error: message })
+    if (name == 'RecursoIndevidoError') response.status(403).json({ error: message })
     else response.status(500).json({ name, message, stack })
     next();
 });
