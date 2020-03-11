@@ -5,8 +5,10 @@ module.exports = (app) => {
 
     const protectedRouter = express.Router();
 
-    protectedRouter.use('/users', app.routes.users)
-    protectedRouter.use('/accounts', app.routes.accounts);
+    protectedRouter
+    .use('/users', app.routes.users)
+    .use('/accounts', app.routes.accounts)
+    .use('/transactions', app.routes.transactions);
 
     app.use(`${process.env.version}`, app.config.passport.authenticate(), protectedRouter);
 };

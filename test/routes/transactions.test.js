@@ -27,8 +27,8 @@ beforeAll(async () => {
 
 test('Deve listar apenas as transações do usuário', () => {
     return app.db('transactions').insert([
-        { description: 'T1', data: new Date(), ammount: 100, type: 'I', acc_id: accUser.id },
-        { description: 'T2', data: new Date(), ammount: 200, type: 'O', acc_id: accUser2.id }
+        { description: 'T1', date: new Date(), ammount: 100, type: 'I', acc_id: accUser.id },
+        { description: 'T2', date: new Date(), ammount: 200, type: 'O', acc_id: accUser2.id }
     ])
     .then(() => {
         return request(app).get(MAIN_ROUTE)
@@ -36,7 +36,16 @@ test('Deve listar apenas as transações do usuário', () => {
         .then(response => {
             expect(response.status).toBe(200);
             expect(response.body).toHaveLength(1);
-            expect(response.body.description).toBe('T1');
+            expect(response.body[0].description).toBe('T1');
         });
+    });
+});
+
+test('Deve inserir uma transação', () => {
+    return request(app).post(MAIN_ROUTE).send({ description: 'New transaction', date: new Date(), ammount: 100, type: 'I', acc_id: accUser.id })
+    .set('authorization', `bearer ${user.token}`)
+    .then(response => {
+        expect(response.status).toBe(201);
+        expect(response.body.acc_id).toBe(accUser.id);
     });
 });
